@@ -1,0 +1,30 @@
+CreateConVar("holsteredreload_enabled", 1, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "whether holstered reload is enabled", 0, 1)
+CreateClientConVar("holsteredreload_feedback_volume", 0, true, false, "play a sound when a holstered reload occurs, 50 is normal", 0, 100)
+CreateConVar("holsteredreload_time_to_reload", 6, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "the amount of time it takes for a stowed gun to reload in seconds", 0)
+CreateConVar("holsteredreload_regen_rockets", 0, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "regen rpgs to 3 over time", 0, 1)
+CreateConVar("holsteredreload_regen_frag_grenades", 0, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "regen frag grenades to 6 over time", 0, 1)
+CreateConVar("holsteredreload_regen_smg_grenades", 0, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "regen smg grenades to 3 over time, only works if ammokill is installed", 0, 1)
+CreateConVar("holsteredreload_regen_combine_balls", 0, FCVAR_ARCHIVE + FCVAR_SERVER_CAN_EXECUTE, "regen combine's balls to 6 over time", 0, 1)
+
+hook.Add("PopulateToolMenu", "HolsteredReload", function()
+    spawnmenu.AddToolMenuOption("Utilities", "lemontine", "HolsteredReload", "Holstered Reload", "", "", function(panel)
+        panel:ClearControls()
+        if LocalPlayer():IsAdmin() or LocalPlayer():IsSuperAdmin() or game.SinglePlayer() then
+            panel:Help("===Server options===")
+            panel:CheckBox("Holstered Reload Enabled", "holsteredreload_enabled")
+
+            panel:NumSlider("Time to holstered reload", "holsteredreload_time_to_reload", 0, 30, 0)
+            panel:ControlHelp("Time (in seconds) it takes for a stowed gun to reload")
+
+            panel:CheckBox("Regen RPG rockets to 3 over time?", "holsteredreload_regen_rockets")
+            panel:CheckBox("Regen frag grenades to 3 over time?", "holsteredreload_regen_frag_grenades")
+            panel:CheckBox("Regen smg grenades to 3 over time?", "holsteredreload_regen_smg_grenades")
+            panel:CheckBox("Regen combine balls to 3 over time?", "holsteredreload_regen_combine_balls")
+        end
+        panel:Help("")
+        panel:Help("===Client options===")
+        panel:NumSlider("Reload feedback", "holsteredreload_feedback_volume", 0, 100, 0)
+        panel:ControlHelp("Reload feedback audio: 0 = off, 50 = normal, 100 = max")
+        panel:Help("(Made by lemontine)")
+    end)
+end)
